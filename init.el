@@ -68,7 +68,7 @@
 (require 'init-hippie-expand)
 (require 'init-corfu)
 (require 'init-windows)
-(require 'init-sessions)
+;; (require 'init-sessions)
 (require 'init-mmm)
 
 (require 'init-editing-utils)
