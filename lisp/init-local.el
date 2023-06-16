@@ -1,9 +1,19 @@
 ;;; --- My customization for Emacs on Purcell's defaults
 
-;; (require 'auto-dark-emacs)
+(require 'auto-dark)
+(auto-dark-mode t)
 
 ;; auto-enable Company Coq
 (add-hook 'coq-mode-hook #'company-coq-mode)
+
+(setq-default tab-width 4)
+
+(defun set-tab (width)
+  "Set the tab width in the current buffer to the specified value."
+  (interactive "nTab width: ")
+  (setq-local tab-width width))
+
+(setq-default indent-tabs-mode nil)
 
 ;; the tabs plugin
 ;; (require 'centaur-tabs)
