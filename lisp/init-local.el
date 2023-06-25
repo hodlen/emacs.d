@@ -6,4 +6,7 @@
 ;; auto-enable Company Coq
 (add-hook 'coq-mode-hook #'company-coq-mode)
 
+(when (memq window-system '(mac ns x))
+  (exec-path-from-shell-initialize))
+
 (provide 'init-local)
