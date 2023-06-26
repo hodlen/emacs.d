@@ -33,7 +33,7 @@
 (require 'bootstrap-local) ;; Bootstrap custom settings
 
 ;; Load rich features only in GUI Emacs
-(when window-system
+(when (or window-system (getenv "EMACS_RICH"))
   (progn
     (setq custom-file (locate-user-emacs-file "custom.el"))
     (require 'init-utils)
