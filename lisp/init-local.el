@@ -8,4 +8,7 @@
 (when (memq window-system '(mac ns x))
   (exec-path-from-shell-initialize))
 
+;; Bind Meta key to Alt at GUI
+(setq x-alt-keysym 'meta)
+
 (provide 'init-local)
