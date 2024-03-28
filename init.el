@@ -9,10 +9,10 @@
 ;; Produce backtraces when errors occur: can be helpful to diagnose startup issues
 ;;(setq debug-on-error t)
 
-(let ((minver "26.1"))
+(let ((minver "27.1"))
   (when (version< emacs-version minver)
     (error "Your Emacs is too old -- this config requires v%s or higher" minver)))
-(when (version< emacs-version "27.1")
+(when (version< emacs-version "28.1")
   (message "Your Emacs is old, and some functionality in this config will be disabled. Please upgrade if possible."))
 
 (add-to-list 'load-path (expand-file-name "lisp" user-emacs-directory))
@@ -21,13 +21,14 @@
 (defconst *spell-check-support-enabled* nil) ;; Enable with t if you prefer
 (defconst *is-a-mac* (eq system-type 'darwin))
 
-;; Adjust garbage collection thresholds during startup, and thereafter
+;; Adjust garbage collection threshold for early startup (see use of gcmh below)
+(setq gc-cons-threshold (* 128 1024 1024))
 
-(let ((normal-gc-cons-threshold (* 20 1024 1024))
-      (init-gc-cons-threshold (* 128 1024 1024)))
-  (setq gc-cons-threshold init-gc-cons-threshold)
-  (add-hook 'emacs-startup-hook
-            (lambda () (setq gc-cons-threshold normal-gc-cons-threshold))))
+
+;; Process performance tuning
+
+(setq read-process-output-max (* 4 1024 1024))
+(setq process-adaptive-read-buffering nil)
 
 ;; Bootstrap config
 (require 'bootstrap-local) ;; Bootstrap custom settings
@@ -41,6 +42,16 @@
     ;; Calls (package-initialize)
     (require 'init-elpa) ;; Machinery for installing required packages
     (require 'init-exec-path) ;; Set up $PATH
+
+
+;; General performance tuning
+(when (require-package 'gcmh)
+  (setq gcmh-high-cons-threshold (* 128 1024 1024))
+  (add-hook 'after-init-hook (lambda ()
+                               (gcmh-mode)
+                               (diminish 'gcmh-mode))))
+
+(setq jit-lock-defer-time 0)
 
     ;; Allow users to provide an optional "init-preload-local.el"
     (require 'init-preload-local nil t)
@@ -112,13 +123,14 @@
     (require 'init-terraform)
     (require 'init-nix)
     (maybe-require-package 'nginx-mode)
+(maybe-require-package 'just-mode)
+(maybe-require-package 'justl)
 
-    (require 'init-paredit)
-    (require 'init-lisp)
-    (require 'init-slime)
-    (require 'init-clojure)
-    (require 'init-clojure-cider)
-    (require 'init-common-lisp)
+(require 'init-paredit)
+(require 'init-lisp)
+(require 'init-sly)
+(require 'init-clojure)
+(require 'init-clojure-cider)
 
     (when *spell-check-support-enabled*
       (require 'init-spelling))
@@ -128,15 +140,16 @@
     (require 'init-folding)
     (require 'init-dash)
 
-    ;;(require 'init-twitter)
-    ;; (require 'init-mu)
-    (require 'init-ledger)
-    ;; Extra packages which don't require any configuration
+(require 'init-ledger)
+(require 'init-lua)
+(require 'init-uiua)
+(require 'init-terminals)
+
+;; Extra packages which don't require any configuration
 
     (require-package 'sudo-edit)
     (require-package 'gnuplot)
-    (require-package 'lua-mode)
-    (require-package 'htmlize)
+        (require-package 'htmlize)
     (when *is-a-mac*
       (require-package 'osx-location))
     (maybe-require-package 'dotenv-mode)
@@ -149,7 +162,14 @@
     (when (fboundp 'global-eldoc-mode)
       (add-hook 'after-init-hook 'global-eldoc-mode))
 
-    (require 'init-direnv)
+(require 'init-direnv)
+
+(when (and (require 'treesit nil t)
+           (fboundp 'treesit-available-p)
+           (treesit-available-p))
+  (require 'init-treesitter))
+
+
 
     ;; Allow access from emacsclient
     (add-hook 'after-init-hook
