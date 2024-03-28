@@ -43,15 +43,15 @@
     (require 'init-elpa) ;; Machinery for installing required packages
     (require 'init-exec-path) ;; Set up $PATH
 
-
-;; General performance tuning
-(when (require-package 'gcmh)
-  (setq gcmh-high-cons-threshold (* 128 1024 1024))
-  (add-hook 'after-init-hook (lambda ()
-                               (gcmh-mode)
-                               (diminish 'gcmh-mode))))
+    
+    ;; General performance tuning
+    (when (require-package 'gcmh)
+      (setq gcmh-high-cons-threshold (* 128 1024 1024))
+      (add-hook 'after-init-hook (lambda ()
+                                   (gcmh-mode)
+                                   (diminish 'gcmh-mode))))
 
-(setq jit-lock-defer-time 0)
+    (setq jit-lock-defer-time 0)
 
     ;; Allow users to provide an optional "init-preload-local.el"
     (require 'init-preload-local nil t)
@@ -123,14 +123,14 @@
     (require 'init-terraform)
     (require 'init-nix)
     (maybe-require-package 'nginx-mode)
-(maybe-require-package 'just-mode)
-(maybe-require-package 'justl)
+    (maybe-require-package 'just-mode)
+    (maybe-require-package 'justl)
 
-(require 'init-paredit)
-(require 'init-lisp)
-(require 'init-sly)
-(require 'init-clojure)
-(require 'init-clojure-cider)
+    (require 'init-paredit)
+    (require 'init-lisp)
+    (require 'init-sly)
+    (require 'init-clojure)
+    (require 'init-clojure-cider)
 
     (when *spell-check-support-enabled*
       (require 'init-spelling))
@@ -140,16 +140,16 @@
     (require 'init-folding)
     (require 'init-dash)
 
-(require 'init-ledger)
-(require 'init-lua)
-(require 'init-uiua)
-(require 'init-terminals)
+    (require 'init-ledger)
+    (require 'init-lua)
+    (require 'init-uiua)
+    (require 'init-terminals)
 
-;; Extra packages which don't require any configuration
+    ;; Extra packages which don't require any configuration
 
     (require-package 'sudo-edit)
     (require-package 'gnuplot)
-        (require-package 'htmlize)
+    (require-package 'htmlize)
     (when *is-a-mac*
       (require-package 'osx-location))
     (maybe-require-package 'dotenv-mode)
@@ -162,14 +162,12 @@
     (when (fboundp 'global-eldoc-mode)
       (add-hook 'after-init-hook 'global-eldoc-mode))
 
-(require 'init-direnv)
+    (require 'init-direnv)
 
-(when (and (require 'treesit nil t)
-           (fboundp 'treesit-available-p)
-           (treesit-available-p))
-  (require 'init-treesitter))
-
-
+    (when (and (require 'treesit nil t)
+               (fboundp 'treesit-available-p)
+               (treesit-available-p))
+      (require 'init-treesitter))
 
     ;; Allow access from emacsclient
     (add-hook 'after-init-hook
