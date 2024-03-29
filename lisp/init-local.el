@@ -1,4 +1,6 @@
 ;;; --- My customization for Emacs on Purcell's defaults
+
+;; (require-package 'auto-dark)
 (use-package auto-dark
   :config (auto-dark-mode t))
 
