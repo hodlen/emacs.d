@@ -12,4 +12,9 @@
 ;; Bind Meta key to Alt at GUI
 (setq x-alt-keysym 'meta)
 
+(add-hook 'conf-mode-hook 'outline-minor-mode)
+
+(when (maybe-require-package 'clipetty)
+  (add-hook 'after-init-hook 'global-clipetty-mode))
+
 (provide 'init-local)
