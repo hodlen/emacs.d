@@ -34,6 +34,14 @@
 
 ;; Bootstrap config
 
+;; Move cache/compiled artifacts to ~/.cache/emacs/
+(let ((cache-dir (expand-file-name "~/.cache/emacs/")))
+  (setq package-user-dir (expand-file-name "elpa/" cache-dir))
+  (setq auto-save-list-file-prefix (expand-file-name "auto-save-list/.saves-" cache-dir))
+  ;; Ensure cache directories exist
+  (make-directory cache-dir t)
+  (make-directory package-user-dir t)
+  (make-directory (expand-file-name "auto-save-list/" cache-dir) t))
 
 (setq custom-file (locate-user-emacs-file "custom.el"))
 (require 'init-utils)
